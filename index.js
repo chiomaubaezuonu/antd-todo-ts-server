@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose')
-const cors = require('cors')
+const cors = require('cors');
+const Task = require('./Model/Task')
 require('dotenv').config();
 const app = express()
 
@@ -14,8 +15,17 @@ mongoose.connect(MONGO_URI)
     .catch(err => console.error(err));
 const port = 5000;
 
-app.get('/', (req, res) => {
-    res.send("All tasks")
+app.get('/todos', (req, res) => {
+    res.send("Get all tasks")
+})
+
+app.post('/todos', (req, res) => {
+    const task = req.body.task;
+    Task.create({
+        task:task
+    })
+    .then(result => res.json(result))
+    .then(err => res.json(err))
 })
 
 app.listen(port, () => {
